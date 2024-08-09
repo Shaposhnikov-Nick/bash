@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # backup work directory
+# 0 23 * * *
 
 if [ ! -d ~/backup ]; then
   mkdir ~/backup
