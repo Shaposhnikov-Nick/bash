@@ -2,8 +2,11 @@
 
 read -p "Enter your year of birth: " birth
 
-if [ $birth -le 1900 ]; then
-	echo "Your birth must ne more than 1900"
+minYear=1900
+currentYear=$(date +'%Y')
+
+if [[ "$birth" -le "$minYear" || "$birth" -gt "$currentYear" ]]; then
+	echo "Your birth must ne more than $minYear and less than $currentYear"
 	exit 1
 fi
 
