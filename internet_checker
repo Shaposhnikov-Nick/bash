@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if host www.ya.ru &>/dev/null ; then
+	echo "DNS resolve works fine"
+else
+	echo "DNS resolve is unavailable"
+fi
+
+if ping -c 4 8.8.8.8 &>/dev/null ; then
+	echo "Network connection is available"
+else
+	echo "Network connection is unavailable"
+	exit 1
+fi
+
+ping -q -c 4 ya.ru | tail -3
