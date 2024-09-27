@@ -1,0 +1,39 @@
+#!/bin/bash
+set +x
+
+alias="kubectl"
+command_pods="get pods"
+command_logs="logs"
+namespace="suppliers"
+context="test"
+help="Default command: kubectl get pods -n suppliers --context=test. 
+\nUse key -p for change context to prod and key -n for namespace nld.
+\nUse key -s with service name to get logs."
+
+while getopts "hps:n" opt; do
+    case $opt in
+        p) context="prod";;
+        s) service_name=$OPTARG;;
+        n) namespace="nld";;
+		h) echo -e $help
+		   exit 1;;
+        *) echo "No reasonable options found!";;
+        ?) echo "Invalid option: -${OPTARG}."
+           exit 1;;
+    esac
+done
+
+full_command="$alias $command_pods -n $namespace --context=$context"
+
+if [ ! -z "$service_name" ]; then
+	service_name_cut=$(eval $full_command | grep "$service_name" | awk '{print $1}')
+    if [ ! -z "$service_name_cut" ]; then
+	   full_command="$alias $command_logs $service_name_cut -n $namespace --context=$context"
+    else
+        echo "Service name '$service_name' not found!"
+		exit 1
+	fi
+fi
+
+$full_command
+echo -e "------------ \nCommand: $full_command \nUse -h for help"
